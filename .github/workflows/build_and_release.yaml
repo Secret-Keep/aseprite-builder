@@ -40,8 +40,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: ncipollo/release-action@v1.21.0
+      - uses: actions/checkout@v4
+      - uses: ncipollo/release-action@v1.14.0
         with:
           tag: ${{ needs.fetch-aseprite-info.outputs.release-tag }}
           body: Aseprite-${{ needs.fetch-aseprite-info.outputs.release-tag }}
@@ -73,7 +73,7 @@ jobs:
             libpixman-1-dev libfreetype6-dev libharfbuzz-dev zlib1g-dev \
             libx11-dev libxcursor-dev libxi-dev libxrandr-dev libgl1-mesa-dev \
             libfontconfig1-dev
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install Aseprite
         shell: bash
         run: |
@@ -94,7 +94,7 @@ jobs:
             unzip Skia-Linux-Release-x64.zip -d skia
           fi
       - uses: aseprite/get-ninja@main
-      - uses: ilammy/msvc-dev-cmd@v1.13.0
+      - uses: ilammy/msvc-dev-cmd@v1.12.0
         if: runner.os == 'Windows'
       - name: Generating Makefiles
         shell: bash
@@ -153,7 +153,6 @@ jobs:
             exit 1
           fi
 
-          # Keep translations and licensing files; omit only Git metadata.
           rm -rf "$strings_dir/.git"
       - name: Make portable zip
         working-directory: aseprite/build/bin
@@ -172,7 +171,7 @@ jobs:
         run: bash "$GITHUB_WORKSPACE/.github/scripts/package-macos.sh" "$ARCHIVE_NAME"
       - name: Upload validation artifact
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.publish }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Aseprite-${{ needs.fetch-aseprite-info.outputs.release-tag }}-${{ runner.os }}-${{ runner.arch }}-attempt${{ github.run_attempt }}
           path: aseprite/build/bin/Aseprite-${{ needs.fetch-aseprite-info.outputs.release-tag }}-${{ runner.os }}.zip
